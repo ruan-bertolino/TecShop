@@ -107,7 +107,6 @@ fun CatalogoDeProdutos(produtos: List<Produto>, modifier: Modifier = Modifier) {
         it.nome.contains(termoBusca, ignoreCase = true)
     }
     val produtosPorCategoria = produtosFiltrados.groupBy { it.categoria }
-
     Column(modifier = modifier) {
         TextField(
             value = termoBusca,
@@ -115,10 +114,17 @@ fun CatalogoDeProdutos(produtos: List<Produto>, modifier: Modifier = Modifier) {
             label = { Text("Buscar produto") },
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         )
-        LazyColumn(contentPadding = PaddingValues(16.dp)) {
-
-            items(produtosFiltrados) { produto ->
-                ProdutoCard(produto = produto)
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            produtosPorCategoria.forEach { (categoria, produtosDaCategoria) ->
+                item {
+                    Text(text = categoria, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                }
+                items(produtosDaCategoria, key = { it.nome }) { produto ->
+                    ProdutoCard(produto = produto)
+                }
             }
         }
     }
